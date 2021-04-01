@@ -3,6 +3,7 @@
 namespace App\ArgumentResolvers;
 
 use App\DTO\CreateUserData;
+use App\DTO\Passport;
 use App\Exception\ApiHttpException\ApiBadRequestException;
 use App\Validators\CreateUserDataValidator;
 use App\VO\ApiErrorCode;
@@ -48,8 +49,9 @@ class CreateUserDataResolver implements ArgumentValueResolverInterface
     {
         $params = json_decode($request->getContent(), true);
         $email = $params['email'] ?? null;
+        $passport = $params['passport'] ?? null;
 
-        $errors = $this->validator->validate(['email' => $email]);
+        $errors = $this->validator->validate(['email' => $email, 'passport' => $passport]);
 
         if (!empty($errors)) {
             throw new ApiBadRequestException(
@@ -58,6 +60,15 @@ class CreateUserDataResolver implements ArgumentValueResolverInterface
             );
         }
 
-        yield new CreateUserData(new Email($email));
+        yield new CreateUserData(
+            new Email($email),
+            new Passport(
+                $passport['series'],
+                $passport['number'],
+                $passport['issue_date'],
+                $passport['division'],
+                $passport['division_code']
+            )
+        );
     }
 }

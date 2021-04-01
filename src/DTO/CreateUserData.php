@@ -12,11 +12,18 @@ class CreateUserData
     private Email $email;
 
     /**
-     * @param Email $email
+     * @var Passport
      */
-    public function __construct(Email $email)
+    private Passport $passport;
+
+    /**
+     * @param Email    $email
+     * @param Passport $passport
+     */
+    public function __construct(Email $email, Passport $passport)
     {
         $this->email = $email;
+        $this->passport = $passport;
     }
 
     /**
@@ -25,5 +32,13 @@ class CreateUserData
     public function getEmail(): Email
     {
         return $this->email;
+    }
+
+    /**
+     * @return Passport
+     */
+    public function getPassport(): Passport
+    {
+        return $this->passport;
     }
 }
