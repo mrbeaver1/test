@@ -26,6 +26,8 @@ class User implements UserInterface
 
     /**
      * @var Collection | Reservation[]
+     *
+     * @ORM\OneToMany(targetEntity="Reservation", mappedBy="owner")
      */
     private Collection $reservations;
 
@@ -38,27 +40,34 @@ class User implements UserInterface
 
     /**
      * @var Collection | Ticket[]
+     *
+     * @ORM\OneToMany(targetEntity="Ticket", mappedBy="owner")
      */
     private Collection $tickets;
 
     /**
      * @var Passport
+     *
+     * @ORM\Embedded(class="App\DTO\Passport")
      */
     private Passport $passport;
 
     /**
      * @param Email                 $email
+     * @param Passport              $passport
      * @param array | Reservation[] $reservations
      * @param array | Ticket[]      $tickets
      */
     public function __construct(
         Email $email,
+        Passport $passport,
         array $reservations = [],
         array $tickets = []
     ) {
         $this->reservations = new ArrayCollection(array_unique($reservations, SORT_REGULAR));
         $this->email = $email;
         $this->tickets = new ArrayCollection(array_unique($tickets, SORT_REGULAR));
+        $this->passport = $passport;
     }
 
     /**
@@ -133,6 +142,26 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return Passport
+     */
+    public function getPassport(): Passport
+    {
+        return $this->passport;
+    }
+
+    /**
+     * @param Passport $passport
+     *
+     * @return User
+     */
+    public function updatePassport(Passport $passport): self
+    {
+        $this->passport = $passport;
+
+        return $this;
+    }
+//Методы для имплементации интерфейса
     public function getRoles()
     {
 

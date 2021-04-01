@@ -15,7 +15,13 @@ class Ticket
      */
     private int $id;
 
+    /**
+     * @var User
+     */
     private User $owner;
 
+    /**
+     * @var Flight
+     */
     private Flight $flight;
 }

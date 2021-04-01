@@ -16,11 +16,28 @@ class Reservation
      */
     private int $id;
 
+    /**
+     * @var DateTimeImmutable
+     */
     private DateTimeImmutable $createdAt;
 
+    /**
+     * @var Flight
+     */
     private Flight $flight;
 
+    /**
+     * @var Place
+     *
+     * @ORM\OneToOne(targetEntity="Place", mappedBy="reservation")
+     */
     private Place $place;
 
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="Reservation")
+     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
+     */
     private User $owner;
 }
