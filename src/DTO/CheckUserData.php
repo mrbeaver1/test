@@ -18,19 +18,19 @@ class CheckUserData
     private string $passportNumber;
 
     /**
-     * @var string | null
+     * @var string
      */
-    private ?string $passportDivisionName;
+    private string $passportDivisionName;
 
     /**
-     * @var string | null
+     * @var string
      */
-    private ?string $passportDivisionCode;
+    private string $passportDivisionCode;
 
     /**
-     * @var DateTimeImmutable | null
+     * @var DateTimeImmutable
      */
-    private ?DateTimeImmutable $passportIssueDate;
+    private DateTimeImmutable $passportIssueDate;
 
     /**
      * @var string | null
@@ -48,21 +48,21 @@ class CheckUserData
     private ?string $middleName;
 
     /**
-     * @param string                   $passportSeries
-     * @param string                   $passportNumber
-     * @param string | null            $passportDivisionName
-     * @param string | null            $passportDivisionCode
-     * @param DateTimeImmutable | null $passportIssueDate
-     * @param string | null            $firstName
-     * @param string | null            $lastName
-     * @param string | null            $middleName
+     * @param string            $passportSeries
+     * @param string            $passportNumber
+     * @param string            $passportDivisionName
+     * @param string            $passportDivisionCode
+     * @param DateTimeImmutable $passportIssueDate
+     * @param string | null     $firstName
+     * @param string | null     $lastName
+     * @param string | null     $middleName
      */
     public function __construct(
         string $passportSeries,
         string $passportNumber,
-        ?string $passportDivisionName,
-        ?string $passportDivisionCode,
-        ?DateTimeImmutable $passportIssueDate,
+        string $passportDivisionName,
+        string $passportDivisionCode,
+        DateTimeImmutable $passportIssueDate,
         ?string $firstName,
         ?string $lastName,
         ?string $middleName
@@ -94,31 +94,31 @@ class CheckUserData
     }
 
     /**
-     * @return string | null
+     * @return string
      */
-    public function getPassportDivisionName(): ?string
+    public function getPassportDivisionName(): string
     {
         return $this->passportDivisionName;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getPassportDivisionCode(): ?string
+    public function getPassportDivisionCode(): string
     {
         return $this->passportDivisionCode;
     }
 
     /**
-     * @return DateTimeImmutable|null
+     * @return DateTimeImmutable
      */
-    public function getPassportIssueDate(): ?DateTimeImmutable
+    public function getPassportIssueDate(): DateTimeImmutable
     {
         return $this->passportIssueDate;
     }
 
     /**
-     * @return string|null
+     * @return string | null
      */
     public function getFirstName(): ?string
     {
@@ -126,7 +126,7 @@ class CheckUserData
     }
 
     /**
-     * @return string|null
+     * @return string | null
      */
     public function getLastName(): ?string
     {
@@ -134,7 +134,7 @@ class CheckUserData
     }
 
     /**
-     * @return string|null
+     * @return string | null
      */
     public function getMiddleName(): ?string
     {
