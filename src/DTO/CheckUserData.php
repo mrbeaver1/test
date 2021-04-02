@@ -2,7 +2,6 @@
 
 namespace App\DTO;
 
-use App\VO\Email;
 use DateTimeImmutable;
 
 class CheckUserData

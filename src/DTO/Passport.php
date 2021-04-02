@@ -159,4 +159,23 @@ class Passport
     {
         return $this->middleName;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $issueDate = $this->passportIssueDate;
+
+        return [
+            'series' => empty($this->passportSeries) ? null : $this->getPassportSeries(),
+            'number' => empty($this->passportNumber) ? null : $this->getPassportNumber(),
+            'division_name' => empty($this->passportDivisionName) ? null : $this->getPassportDivisionName(),
+            'division_code' => empty($this->passportDivisionCode) ? null : $this->getPassportDivisionCode(),
+            'issue_date' => is_null($issueDate) ? null : $issueDate->format(DateTimeImmutable::ATOM),
+            'first_name' => empty($this->firstName) ? null : $this->getFirstName(),
+            'last_name' => empty($this->lastName) ? null : $this->getLastName(),
+            'middle_name' => empty($this->middleName) ? null : $this->getMiddleName(),
+        ];
+    }
 }

@@ -2,10 +2,10 @@
 
 namespace App\ArgumentResolvers;
 
-use App\DTO\CreateUserData;
+use App\DTO\RegisterUserData;
 use App\DTO\Passport;
 use App\Exception\ApiHttpException\ApiBadRequestException;
-use App\Validators\CreateUserDataValidator;
+use App\Validators\RegisterUserDataValidator;
 use App\VO\ApiErrorCode;
 use App\VO\Email;
 use Generator;
@@ -13,17 +13,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class CreateUserDataResolver implements ArgumentValueResolverInterface
+class RegisterUserDataResolver implements ArgumentValueResolverInterface
 {
     /**
-     * @var CreateUserDataValidator
+     * @var RegisterUserDataValidator
      */
-    private CreateUserDataValidator $validator;
+    private RegisterUserDataValidator $validator;
 
     /**
-     * @param CreateUserDataValidator $validator
+     * @param RegisterUserDataValidator $validator
      */
-    public function __construct(CreateUserDataValidator $validator)
+    public function __construct(RegisterUserDataValidator $validator)
     {
         $this->validator = $validator;
     }
@@ -36,7 +36,7 @@ class CreateUserDataResolver implements ArgumentValueResolverInterface
      */
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        return CreateUserData::class === $argument->getType();
+        return RegisterUserData::class === $argument->getType();
     }
 
     /**
@@ -60,14 +60,17 @@ class CreateUserDataResolver implements ArgumentValueResolverInterface
             );
         }
 
-        yield new CreateUserData(
+        yield new RegisterUserData(
             new Email($email),
             new Passport(
                 $passport['series'],
                 $passport['number'],
+                $passport['division_name'],
+                $passport['division_code'],
                 $passport['issue_date'],
-                $passport['division'],
-                $passport['division_code']
+                $passport['first_name'],
+                $passport['last_name'],
+                $passport['middle_name']
             )
         );
     }

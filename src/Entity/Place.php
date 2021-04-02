@@ -24,11 +24,18 @@ class Place
     private Flight $flight;
 
     /**
-     * @param Flight $flight
+     * @var Ticket
      */
-    public function __construct(Flight $flight)
+    private Ticket $ticket;
+
+    /**
+     * @param Flight $flight
+     * @param Ticket $ticket
+     */
+    public function __construct(Flight $flight, Ticket $ticket)
     {
         $this->flight = $flight;
+        $this->ticket = $ticket;
     }
 
     /**
@@ -55,6 +62,26 @@ class Place
     public function updateFlight(Flight $flight): self
     {
         $this->flight = $flight;
+
+        return $this;
+    }
+
+    /**
+     * @return Ticket
+     */
+    public function getTicket(): Ticket
+    {
+        return $this->ticket;
+    }
+
+    /**
+     * @param Ticket $ticket
+     *
+     * @return Place
+     */
+    public function updateTicket(Ticket $ticket): self
+    {
+        $this->ticket = $ticket;
 
         return $this;
     }

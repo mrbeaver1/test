@@ -161,6 +161,30 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getReservationsInArray(): array
+    {
+        return $this->getReservations()->map(
+            static function (Reservation $reservation): array {
+                return $reservation->toArray();
+            }
+        )->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function getTicketsInArray(): array
+    {
+        return $this->getTickets()->map(
+            static function (Ticket $ticket): array {
+                return $ticket->toArray();
+            }
+        )->toArray();
+    }
 //Методы для имплементации интерфейса
     public function getRoles()
     {
@@ -185,5 +209,19 @@ class User implements UserInterface
     public function getPassword()
     {
         // TODO: Implement getPassword() method.
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'email' => empty($this->email) ? null : $this->getEmail(),
+            'reservations' => $this->getReservationsInArray(),
+            'tickets' => $this->getTicketsInArray(),
+            'passport' => empty($this->passport) ? null : $this->getPassport()->toArray(),
+        ];
     }
 }
