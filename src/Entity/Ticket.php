@@ -13,7 +13,7 @@ class Ticket
      * @ORM\Id
      * @ORM\GeneratedValue
      */
-    private int $id;
+    private $id;
 
     /**
      * @var User
@@ -21,7 +21,7 @@ class Ticket
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
-    private User $owner;
+    private $owner;
 
     /**
      * @var Flight
@@ -29,14 +29,14 @@ class Ticket
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
-    private Flight $flight;
+    private $flight;
 
     /**
      * @var Place
      *
      * @ORM\OneToOne(targetEntity="Place", mappedBy="ticket")
      */
-    private Place $place;
+    private $place;
 
     /**
      * @param User   $owner

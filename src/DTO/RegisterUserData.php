@@ -9,12 +9,12 @@ class RegisterUserData
     /**
      * @var Email
      */
-    private Email $email;
+    private $email;
 
     /**
      * @var Passport
      */
-    private Passport $passport;
+    private $passport;
 
     /**
      * @param Email    $email

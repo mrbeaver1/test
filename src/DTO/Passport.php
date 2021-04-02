@@ -15,56 +15,56 @@ class Passport
      *
      * @ORM\Column(type="string", name="series")
      */
-    private string $passportSeries;
+    private $passportSeries;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", name="number")
      */
-    private string $passportNumber;
+    private $passportNumber;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", name="division")
      */
-    private string $passportDivisionName;
+    private $passportDivisionName;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", name="division_code")
      */
-    private string $passportDivisionCode;
+    private $passportDivisionCode;
 
     /**
      * @var DateTimeImmutable
      *
      * @ORM\Column(type="datetime_immutable", name="issue_date")
      */
-    private DateTimeImmutable $passportIssueDate;
+    private $passportIssueDate;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", name="first_name")
      */
-    private string $firstName;
+    private $firstName;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", name="last_name")
      */
-    private string $lastName;
+    private $lastName;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", name="middle_name")
      */
-    private string $middleName;
+    private $middleName;
 
     /**
      * @param string            $passportSeries

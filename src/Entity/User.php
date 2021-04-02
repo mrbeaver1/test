@@ -22,35 +22,35 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      */
-    private int $id;
+    private $id;
 
     /**
      * @var Collection | Reservation[]
      *
      * @ORM\OneToMany(targetEntity="Reservation", mappedBy="owner")
      */
-    private Collection $reservations;
+    private $reservations;
 
     /**
      * @var Email
      *
      * @ORM\Embedded(class="App\VO\Email")
      */
-    private Email $email;
+    private $email;
 
     /**
      * @var Collection | Ticket[]
      *
      * @ORM\OneToMany(targetEntity="Ticket", mappedBy="owner")
      */
-    private Collection $tickets;
+    private $tickets;
 
     /**
      * @var Passport
      *
      * @ORM\Embedded(class="App\DTO\Passport")
      */
-    private Passport $passport;
+    private $passport;
 
     /**
      * @param Email                 $email

@@ -2,28 +2,28 @@
 
 namespace App\ArgumentResolvers;
 
-use App\DTO\RegisterUserData;
-use App\DTO\Passport;
+use App\DTO\CreateFlightData;
 use App\Exception\ApiHttpException\ApiBadRequestException;
-use App\Validators\RegisterUserDataValidator;
+use App\Validators\CreateFlightDataValidator;
 use App\VO\ApiErrorCode;
-use App\VO\Email;
+use DateTimeImmutable;
+use Exception;
 use Generator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class RegisterUserDataResolver implements ArgumentValueResolverInterface
+class CreateFlightDataResolver implements ArgumentValueResolverInterface
 {
     /**
-     * @var RegisterUserDataValidator
+     * @var CreateFlightDataValidator
      */
     private $validator;
 
     /**
-     * @param RegisterUserDataValidator $validator
+     * @param CreateFlightDataValidator $validator
      */
-    public function __construct(RegisterUserDataValidator $validator)
+    public function __construct(CreateFlightDataValidator $validator)
     {
         $this->validator = $validator;
     }
@@ -36,22 +36,30 @@ class RegisterUserDataResolver implements ArgumentValueResolverInterface
      */
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        return RegisterUserData::class === $argument->getType();
+        return CreateFlightData::class === $argument->getType();
     }
 
     /**
-     * @param Request          $request
+     * @param Request $request
      * @param ArgumentMetadata $argument
      *
      * @return Generator
+     *
+     * @throws Exception
      */
     public function resolve(Request $request, ArgumentMetadata $argument): Generator
     {
         $params = json_decode($request->getContent(), true);
-        $email = $params['email'] ?? null;
-        $passport = $params['passport'] ?? null;
 
-        $errors = $this->validator->validate(['email' => $email, 'passport' => $passport]);
+        $number = $params['number'] ?? null;
+        $date = $params['date'] ?? null;
+        $placesCount = $params['places_count'] ?? null;
+
+        $errors = $this->validator->validate([
+            'number' => $number,
+            'date' => $date,
+            'places_count' => $placesCount,
+        ]);
 
         if (!empty($errors)) {
             throw new ApiBadRequestException(
@@ -60,18 +68,10 @@ class RegisterUserDataResolver implements ArgumentValueResolverInterface
             );
         }
 
-        yield new RegisterUserData(
-            new Email($email),
-            new Passport(
-                $passport['series'],
-                $passport['number'],
-                $passport['division_name'],
-                $passport['division_code'],
-                $passport['issue_date'],
-                $passport['first_name'],
-                $passport['last_name'],
-                $passport['middle_name']
-            )
+        yield new CreateFlightData(
+            $number,
+            new DateTimeImmutable($date),
+            $placesCount
         );
     }
 }

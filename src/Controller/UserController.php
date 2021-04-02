@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\DTO\CheckUserData;
 use App\DTO\RegisterUserData;
+use App\Exception\ApiHttpException\ApiBadRequestException;
+use App\Exception\ApiHttpException\ApiNotFoundException;
 use App\Exception\EntityException\EntityExistsException;
 use App\Repository\UserRepositoryInterface;
 use App\Services\UserService;
@@ -22,11 +24,23 @@ class UserController extends AbstractController
     /**
      * @var UserRepositoryInterface
      */
-    private UserRepositoryInterface $userRepository;
+    private $userRepository;
     /**
      * @var UserService
      */
-    private UserService $userService;
+    private $userService;
+
+    /**
+     * @param UserRepositoryInterface $userRepository
+     * @param UserService             $userService
+     */
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        UserService $userService
+    ) {
+        $this->userRepository = $userRepository;
+        $this->userService = $userService;
+    }
 
     /**
      * @Route("/user", methods={"GET"})
@@ -36,7 +50,7 @@ class UserController extends AbstractController
      * @return JsonResponse
      *
      * @throws NonUniqueResultException
-     * @throws EntityNotFoundException
+     * @throws ApiNotFoundException
      */
     public function showUser(CheckUserData $checkUserData): JsonResponse
     {
@@ -52,7 +66,7 @@ class UserController extends AbstractController
         );
 
         if (is_null($user)) {
-            throw new EntityNotFoundException(
+            throw new ApiNotFoundException(
                 ['Юзер с такими паспортными данными не существует в системе'],
                 new ApiErrorCode(ApiErrorCode::ENTITY_EXISTS)
             );
@@ -70,8 +84,8 @@ class UserController extends AbstractController
      *
      * @return JsonResponse
      *
-     * @throws EntityExistsException
      * @throws NonUniqueResultException
+     * @throws ApiBadRequestException
      */
     public function registerUser(RegisterUserData $registerUserData): JsonResponse
     {
@@ -89,7 +103,7 @@ class UserController extends AbstractController
         );
 
         if (!is_null($user)) {
-            throw new EntityExistsException(
+            throw new ApiBadRequestException(
                 ['Юзер с такими паспортными данными уже существует в системе'],
                 new ApiErrorCode(ApiErrorCode::ENTITY_EXISTS)
             );

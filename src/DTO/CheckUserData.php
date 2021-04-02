@@ -9,42 +9,42 @@ class CheckUserData
     /**
      * @var string
      */
-    private string $passportSeries;
+    private $passportSeries;
 
     /**
      * @var string
      */
-    private string $passportNumber;
+    private $passportNumber;
 
     /**
      * @var string
      */
-    private string $passportDivisionName;
+    private $passportDivisionName;
 
     /**
      * @var string
      */
-    private string $passportDivisionCode;
+    private $passportDivisionCode;
 
     /**
      * @var DateTimeImmutable
      */
-    private DateTimeImmutable $passportIssueDate;
+    private $passportIssueDate;
 
     /**
      * @var string | null
      */
-    private ?string $firstName;
+    private $firstName;
 
     /**
      * @var string | null
      */
-    private ?string $lastName;
+    private $lastName;
 
     /**
      * @var string | null
      */
-    private ?string $middleName;
+    private $middleName;
 
     /**
      * @param string            $passportSeries

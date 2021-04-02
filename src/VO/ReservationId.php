@@ -2,32 +2,25 @@
 
 namespace App\VO;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Embeddable
- */
-class Email
+class ReservationId
 {
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", name="email", unique=true)
+     * @var int
      */
     private $value;
 
     /**
-     * @param string $value
+     * @param int $value
      */
-    public function __construct(string $value)
+    public function __construct(int $value)
     {
         $this->value = $value;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getValue(): string
+    public function getValue(): int
     {
         return $this->value;
     }

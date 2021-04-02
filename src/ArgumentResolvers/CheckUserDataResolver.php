@@ -18,7 +18,7 @@ class CheckUserDataResolver implements ArgumentValueResolverInterface
     /**
      * @var CheckUserDataValidator
      */
-    private CheckUserDataValidator $validator;
+    private $validator;
 
     /**
      * @param CheckUserDataValidator $validator

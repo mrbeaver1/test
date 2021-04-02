@@ -16,37 +16,46 @@ class Flight
      * @ORM\Id
      * @ORM\GeneratedValue
      */
-    private int $id;
+    private $id;
 
     /**
      * @var Collection | Place[]
      *
      * @ORM\OneToMany(targetEntity="Place", mappedBy="flight")
      */
-    private Collection $places;
+    private $places;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="flight_number", unique=true)
+     */
+    private $flightNumber;
 
     /**
      * @var DateTimeImmutable
      *
      * @ORM\Column(type="datetime_immutable")
      */
-    private DateTimeImmutable $departure;
+    private $departure;
 
     /**
      * @var bool
      *
      * @ORM\Column(type="boolean", name="is_active", options={"default" : true})
      */
-    private bool $isActive;
+    private $isActive;
 
     /**
-     * @param array | Place[] $places
-     * @param DateTimeImmutable  $departure
+     * @param int               $flightNumber
+     * @param DateTimeImmutable $departure
+     * @param array | Place[]   $places
      */
-    public function __construct(DateTimeImmutable $departure, array $places = [])
+    public function __construct(int $flightNumber, DateTimeImmutable $departure, array $places = [])
     {
         $this->places = new ArrayCollection(array_unique($places, SORT_REGULAR));
         $this->departure = $departure;
+        $this->flightNumber = $flightNumber;
     }
 
     /**
@@ -115,6 +124,26 @@ class Flight
     public function updateIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFlightNumber(): int
+    {
+        return $this->flightNumber;
+    }
+
+    /**
+     * @param int $flightNumber
+     *
+     * @return Flight
+     */
+    public function setFlightNumber(int $flightNumber): self
+    {
+        $this->flightNumber = $flightNumber;
 
         return $this;
     }

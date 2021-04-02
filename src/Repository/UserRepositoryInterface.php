@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use App\VO\Email;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\NonUniqueResultException;
 
 interface UserRepositoryInterface
@@ -33,4 +34,13 @@ interface UserRepositoryInterface
         ?string $lastName,
         ?string $middleName
     ): ?User;
+
+    /**
+     * @param int $id
+     *
+     * @return User
+     *
+     * @throws EntityNotFoundException
+     */
+    public function getById(int $id): User;
 }

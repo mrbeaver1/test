@@ -13,7 +13,7 @@ class Place
      * @ORM\Id
      * @ORM\GeneratedValue
      */
-    private int $id;
+    private $id;
 
     /**
      * @var Flight
@@ -21,21 +21,43 @@ class Place
      * @ORM\ManyToOne(targetEntity="Flight")
      * @ORM\JoinColumn(name="Flight_id", referencedColumnName="id")
      */
-    private Flight $flight;
+    private $flight;
 
     /**
-     * @var Ticket
+     * @var Ticket | null
      */
-    private Ticket $ticket;
+    private $ticket;
 
     /**
-     * @param Flight $flight
-     * @param Ticket $ticket
+     * @var Reservation | null
+     *
+     * @ORM\Column(type="int", name="reservation")
      */
-    public function __construct(Flight $flight, Ticket $ticket)
-    {
+    private $reservation;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="int", name="number")
+     */
+    private $placeNumber;
+
+    /**
+     * @param Flight             $flight
+     * @param int                $placeNumber
+     * @param Reservation | null $reservation
+     * @param Ticket | null      $ticket
+     */
+    public function __construct(
+        Flight $flight,
+        int $placeNumber,
+        ?Reservation $reservation = null,
+        ?Ticket $ticket = null
+    ) {
         $this->flight = $flight;
         $this->ticket = $ticket;
+        $this->reservation = $reservation;
+        $this->placeNumber = $placeNumber;
     }
 
     /**
@@ -67,9 +89,9 @@ class Place
     }
 
     /**
-     * @return Ticket
+     * @return Ticket | null
      */
-    public function getTicket(): Ticket
+    public function getTicket(): ?Ticket
     {
         return $this->ticket;
     }
@@ -82,6 +104,46 @@ class Place
     public function updateTicket(Ticket $ticket): self
     {
         $this->ticket = $ticket;
+
+        return $this;
+    }
+
+    /**
+     * @return Reservation | null
+     */
+    public function getReservation(): ?Reservation
+    {
+        return $this->reservation;
+    }
+
+    /**
+     * @param Reservation | null $reservation
+     *
+     * @return Place
+     */
+    public function updateReservation(?Reservation $reservation): self
+    {
+        $this->reservation = $reservation;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPlaceNumber(): int
+    {
+        return $this->placeNumber;
+    }
+
+    /**
+     * @param int $placeNumber
+     *
+     * @return Place
+     */
+    public function updatePlaceNumber(int $placeNumber): self
+    {
+        $this->placeNumber = $placeNumber;
 
         return $this;
     }

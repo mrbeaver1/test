@@ -14,21 +14,21 @@ class Reservation
      * @ORM\Id
      * @ORM\GeneratedValue
      */
-    private int $id;
+    private $id;
 
     /**
      * @var DateTimeImmutable
      *
      * @ORM\Column(type="datetime_immutable", name="created_at")
      */
-    private DateTimeImmutable $createdAt;
+    private $createdAt;
 
     /**
      * @var Place
      *
      * @ORM\OneToOne(targetEntity="Place", mappedBy="reservation")
      */
-    private Place $place;
+    private $place;
 
     /**
      * @var User
@@ -36,7 +36,7 @@ class Reservation
      * @ORM\ManyToOne(targetEntity="Reservation")
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
-    private User $owner;
+    private $owner;
 
     /**
      * @param Place $place

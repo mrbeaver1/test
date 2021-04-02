@@ -12,7 +12,7 @@ class UserService
     /**
      * @var EntityManagerInterface
      */
-    private EntityManagerInterface $em;
+    private $em;
 
     /**
      * @param EntityManagerInterface  $em
