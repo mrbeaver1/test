@@ -2,54 +2,42 @@
 
 namespace App\ArgumentResolvers;
 
-use App\DTO\CreateUserData;
+use App\DTO\PlaceNumberData;
 use App\Exception\ApiHttpException\ApiBadRequestException;
-use App\Validators\CreateUserDataValidator;
+use App\Validators\PlaceNumberDataValidator;
 use App\VO\ApiErrorCode;
-use App\VO\Email;
 use Generator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class CreateUserDataResolver implements ArgumentValueResolverInterface
+class PlaceNumberDataResolver implements ArgumentValueResolverInterface
 {
     /**
-     * @var CreateUserDataValidator
+     * @var PlaceNumberDataValidator
      */
-    private CreateUserDataValidator $validator;
+    private $validator;
 
     /**
-     * @param CreateUserDataValidator $validator
+     * @param PlaceNumberDataValidator $validator
      */
-    public function __construct(CreateUserDataValidator $validator)
+    public function __construct(PlaceNumberDataValidator $validator)
     {
         $this->validator = $validator;
     }
 
-    /**
-     * @param Request          $request
-     * @param ArgumentMetadata $argument
-     *
-     * @return bool
-     */
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        return CreateUserData::class === $argument->getType();
+        return PlaceNumberData::class === $argument->getType();
     }
 
-    /**
-     * @param Request          $request
-     * @param ArgumentMetadata $argument
-     *
-     * @return Generator
-     */
     public function resolve(Request $request, ArgumentMetadata $argument): Generator
     {
         $params = json_decode($request->getContent(), true);
-        $email = $params['email'] ?? null;
 
-        $errors = $this->validator->validate(['email' => $email]);
+        $placeNumber = $params['place_number'] ?? null;
+
+        $errors = $this->validator->validate(['place_number' => $placeNumber]);
 
         if (!empty($errors)) {
             throw new ApiBadRequestException(
@@ -58,6 +46,6 @@ class CreateUserDataResolver implements ArgumentValueResolverInterface
             );
         }
 
-        yield new CreateUserData(new Email($email));
+        yield new PlaceNumberData($placeNumber);
     }
 }

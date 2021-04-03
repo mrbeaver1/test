@@ -12,17 +12,17 @@ class ApiNotFoundException extends NotFoundHttpException implements ApiException
     /**
      * @var array | string[]
      */
-    private array $errors;
+    private $errors;
 
     /**
      * @var ApiErrorCode
      */
-    private ApiErrorCode $apiErrorCode;
+    private $apiErrorCode;
 
     /**
      * @var HttpCode
      */
-    private HttpCode $httpCode;
+    private $httpCode;
 
     /**
      * @param array            $errors

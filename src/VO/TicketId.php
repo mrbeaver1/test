@@ -2,25 +2,25 @@
 
 namespace App\VO;
 
-class PhoneNumber
+class TicketId
 {
     /**
-     * @var string
+     * @var int
      */
     private $value;
 
     /**
-     * @param string $value
+     * @param int $value
      */
-    public function __construct(string $value)
+    public function __construct(int $value)
     {
-        $this->value = preg_replace('/\+|\(|\)|\-|\s/', '', $value);
+        $this->value = $value;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getValue(): string
+    public function getValue(): int
     {
         return $this->value;
     }

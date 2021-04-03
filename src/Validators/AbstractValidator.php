@@ -13,17 +13,17 @@ abstract class AbstractValidator
     /**
      * @var ValidatorInterface
      */
-    private ValidatorInterface $validator;
+    private $validator;
 
     /**
      * @var array
      */
-    protected array $validationRules = [];
+    protected $validationRules = [];
 
     /**
      * @var array
      */
-    protected array $optionalFields;
+    protected $optionalFields;
 
     /**
      * @param ValidatorInterface $validator

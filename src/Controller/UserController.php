@@ -3,22 +3,32 @@
 namespace App\Controller;
 
 use App\DTO\CheckUserData;
-use App\DTO\CreateUserData;
+use App\DTO\RegisterUserData;
 use App\Exception\ApiHttpException\ApiBadRequestException;
 use App\Exception\ApiHttpException\ApiNotFoundException;
+use App\Exception\EntityException\EntityExistsException;
 use App\Repository\UserRepositoryInterface;
 use App\Services\UserService;
 use App\VO\ApiErrorCode;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\NonUniqueResultException;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UserController extends ApiController
+/**
+ * @Route("/user-api/v1")
+ */
+class UserController extends AbstractController
 {
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
     /**
      * @var UserService
      */
-    private UserService $userService;
+    private $userService;
 
     /**
      * @param UserRepositoryInterface $userRepository
@@ -28,8 +38,7 @@ class UserController extends ApiController
         UserRepositoryInterface $userRepository,
         UserService $userService
     ) {
-        parent::__construct($userRepository);
-
+        $this->userRepository = $userRepository;
         $this->userService = $userService;
     }
 
@@ -41,46 +50,69 @@ class UserController extends ApiController
      * @return JsonResponse
      *
      * @throws NonUniqueResultException
+     * @throws ApiNotFoundException
      */
     public function showUser(CheckUserData $checkUserData): JsonResponse
     {
-        $user = $this->userRepository->findByEmail($checkUserData->getEmail());
+        $user = $this->userRepository->findByPassport(
+            $checkUserData->getPassportSeries(),
+            $checkUserData->getPassportNumber(),
+            $checkUserData->getPassportDivisionName(),
+            $checkUserData->getPassportDivisionCode(),
+            $checkUserData->getPassportIssueDate(),
+            $checkUserData->getFirstName(),
+            $checkUserData->getLastName(),
+            $checkUserData->getMiddleName()
+        );
 
-        if (empty($user)) {
+        if (is_null($user)) {
             throw new ApiNotFoundException(
-                ['Пользователь не найден'],
-                new ApiErrorCode(ApiErrorCode::USER_NOT_FOUND)
+                ['Юзер с такими паспортными данными не существует в системе'],
+                new ApiErrorCode(ApiErrorCode::ENTITY_EXISTS)
             );
         }
+
         return new JsonResponse([
-            'data' => [
-                $user->toArray(),
-            ],
+            'data' => $user->toArray(),
         ], JsonResponse::HTTP_OK);
     }
 
     /**
      * @Route("/user", methods={"POST"})
      *
-     * @param CreateUserData $createUserData
+     * @param RegisterUserData $registerUserData
      *
      * @return JsonResponse
      *
      * @throws NonUniqueResultException
+     * @throws ApiBadRequestException
      */
-    public function createUser(CreateUserData $createUserData): JsonResponse
+    public function registerUser(RegisterUserData $registerUserData): JsonResponse
     {
-        if (!is_null($this->userRepository->findByEmail($createUserData->getEmail()))) {
+        $passport = $registerUserData->getPassport();
+
+        $user = $this->userRepository->findByPassport(
+            $passport->getPassportSeries(),
+            $passport->getPassportNumber(),
+            $passport->getPassportDivisionName(),
+            $passport->getPassportDivisionCode(),
+            $passport->getPassportIssueDate(),
+            $passport->getFirstName(),
+            $passport->getLastName(),
+            $passport->getMiddleName()
+        );
+
+        if (!is_null($user)) {
             throw new ApiBadRequestException(
-                ["Юзер с email {$createUserData->getEmail()->getValue()}"],
+                ['Юзер с такими паспортными данными уже существует в системе'],
                 new ApiErrorCode(ApiErrorCode::ENTITY_EXISTS)
             );
         }
 
-        $user = $this->userService->createUser($createUserData->getEmail());
-
         return new JsonResponse([
-            'data' => $user->toArray(),
+            'data' => [
+                'id' => $this->userService->registerUser($registerUserData->getEmail(), $passport)->getId(),
+            ],
         ], JsonResponse::HTTP_CREATED);
     }
 }

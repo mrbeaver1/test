@@ -2,46 +2,39 @@
 
 namespace App\Services;
 
+use App\DTO\Passport;
 use App\Entity\User;
-use App\Repository\UserRepositoryInterface;
 use App\VO\Email;
-use App\VO\PhoneNumber;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService
 {
     /**
-     * @var UserRepositoryInterface
-     */
-    private UserRepositoryInterface $userRepository;
-
-    /**
      * @var EntityManagerInterface
      */
-    private EntityManagerInterface $em;
+    private $em;
 
     /**
-     * @param UserRepositoryInterface $userRepository
      * @param EntityManagerInterface  $em
      */
     public function __construct(
-        UserRepositoryInterface $userRepository,
         EntityManagerInterface $em
     ) {
-        $this->userRepository = $userRepository;
         $this->em = $em;
     }
 
     /**
-     * @param Email $email
+     * @param Email    $email
+     * @param Passport $passport
      *
      * @return User
      */
-    public function createUser(Email $email): User
+    public function registerUser(Email $email, Passport $passport): User
     {
-        $user = new User($email);
+        $user = new User($email, $passport);
 
         $this->em->persist($user);
+
         $this->em->flush();
 
         return $user;

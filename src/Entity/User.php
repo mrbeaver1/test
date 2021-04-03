@@ -2,13 +2,11 @@
 
 namespace App\Entity;
 
+use App\DTO\Passport;
 use App\VO\Email;
-use App\VO\PhoneNumber;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Embedded;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -24,118 +22,52 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      */
-    private int $id;
+    private $id;
 
     /**
-     * @var PhoneNumber | null
+     * @var Collection | Reservation[]
      *
-     * @ORM\Column(type="phone_number", name="phone", nullable=true)
+     * @ORM\OneToMany(targetEntity="Reservation", mappedBy="owner")
      */
-    private ?PhoneNumber $phone;
+    private $reservations;
 
     /**
      * @var Email
      *
-     * @Embedded(class="App\VO\Email", columnPrefix=false)
+     * @ORM\Embedded(class="App\VO\Email")
      */
-    private Email $email;
+    private $email;
 
     /**
-     * @var string | null
+     * @var Collection | Ticket[]
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\OneToMany(targetEntity="Ticket", mappedBy="owner")
      */
-    private ?string $password;
+    private $tickets;
 
     /**
-     * @var Collection | Order[]
+     * @var Passport
      *
-     * @ORM\OneToMany(targetEntity="Order", mappedBy="user")
+     * @ORM\Embedded(class="App\DTO\Passport")
      */
-    private Collection $orders;
-
-    /**
-     * @var int | null
-     */
-    private ?int $userId;
-
-    /**
-     * @var Collection | Article[]
-     *
-     * @ORM\OneToMany(targetEntity="Article", mappedBy="user")
-     */
-    private Collection $articles;
-
-    /**
-     * @var DateTimeImmutable
-     *
-     * @ORM\Column(type="date_immutable")
-     */
-    private DateTimeImmutable $createdAt;
-
-    /**
-     * @var Collection | Transaction[]
-     *
-     * @ORM\OneToMany(targetEntity="Transaction", mappedBy="user")
-     */
-    private Collection $transactions;
-
-    /**
-     * @var Collection | Card[]
-     *
-     * @ORM\OneToMany(targetEntity="Card", mappedBy="user")
-     */
-    private Collection $cards;
-
-    /**
-     * @var Collection | Comment[]
-     *
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="user")
-     */
-    private Collection $comments;
-
-    /**
-     * @var Collection | Goods[]
-     *
-     * @ORM\OneToMany(targetEntity="Goods", mappedBy="user")
-     */
-    private Collection $goods;
+    private $passport;
 
     /**
      * @param Email                 $email
-     * @param PhoneNumber | null    $phone
-     * @param string | null         $password
-     * @param array | Order[]       $orders
-     * @param int | null            $userId
-     * @param array | Article[]     $articles
-     * @param array | Transaction[] $transactions
-     * @param array | Card[]        $cards
-     * @param array | Comment[]     $comments
-     * @param array | Goods[]       $goods
+     * @param Passport              $passport
+     * @param array | Reservation[] $reservations
+     * @param array | Ticket[]      $tickets
      */
     public function __construct(
         Email $email,
-        ?PhoneNumber $phone = null,
-        ?string $password = null,
-        array $orders = [],
-        ?int $userId = null,
-        array $articles = [],
-        array $transactions = [],
-        array $cards = [],
-        array $comments = [],
-        array $goods = []
+        Passport $passport,
+        array $reservations = [],
+        array $tickets = []
     ) {
-        $this->phone = $phone;
+        $this->reservations = new ArrayCollection(array_unique($reservations, SORT_REGULAR));
         $this->email = $email;
-        $this->password = $password;
-        $this->orders = new ArrayCollection(array_unique($orders, SORT_REGULAR));
-        $this->userId = $userId;
-        $this->articles = new ArrayCollection(array_unique($articles, SORT_REGULAR));
-        $this->createdAt = new DateTimeImmutable();
-        $this->transactions = new ArrayCollection(array_unique($transactions, SORT_REGULAR));
-        $this->cards = new ArrayCollection(array_unique($cards, SORT_REGULAR));
-        $this->comments = new ArrayCollection(array_unique($comments, SORT_REGULAR));
-        $this->goods = new ArrayCollection(array_unique($goods, SORT_REGULAR));
+        $this->tickets = new ArrayCollection(array_unique($tickets, SORT_REGULAR));
+        $this->passport = $passport;
     }
 
     /**
@@ -147,93 +79,23 @@ class User implements UserInterface
     }
 
     /**
-     * @return PhoneNumber | null
+     * @return Collection | Reservation[]
      */
-    public function getPhone(): ?PhoneNumber
+    public function getReservations(): Collection
     {
-        return $this->phone;
+        return $this->reservations;
     }
 
     /**
-     * @return Email
-     */
-    public function getEmail(): Email
-    {
-        return $this->email;
-    }
-
-    /**
-     * @return Collection | Order[]
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    /**
-     * @return int | null
-     */
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @return Collection | Article[]
-     */
-    public function getArticles(): Collection
-    {
-        return $this->articles;
-    }
-
-    /**
-     * @return DateTimeImmutable
-     */
-    public function getCreatedAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @return Collection | Transaction[]
-     */
-    public function getTransactions(): Collection
-    {
-        return $this->transactions;
-    }
-
-    /**
-     * @return Collection | Card[]
-     */
-    public function getCards(): Collection
-    {
-        return $this->cards;
-    }
-
-    /**
-     * @return Collection | Comment[]
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    /**
-     * @return string | null
-     */
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    /**
-     * @param PhoneNumber $phone
+     * @param Reservation $reservation
      *
      * @return User
      */
-    public function updatePhone(PhoneNumber $phone): self
+    public function addReservation(Reservation $reservation): self
     {
-        $this->phone = $phone;
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+        }
 
         return $this;
     }
@@ -251,117 +113,51 @@ class User implements UserInterface
     }
 
     /**
-     * @param string | null $password
+     * @return Email
+     */
+    public function getEmail(): Email
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return Collection | Ticket[]
+     */
+    public function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    /**
+     * @param Ticket $ticket
      *
      * @return User
      */
-    public function updatePassword(?string $password): self
+    public function addTicket(Ticket $ticket): self
     {
-        $this->password = $password;
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+        }
 
         return $this;
     }
 
     /**
-     * @param int | null $userId
+     * @return Passport
+     */
+    public function getPassport(): Passport
+    {
+        return $this->passport;
+    }
+
+    /**
+     * @param Passport $passport
      *
      * @return User
      */
-    public function updateUserId(?int $userId): self
+    public function updatePassport(Passport $passport): self
     {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
-    /**
-     * @param Order $order
-     *
-     * @return User
-     */
-    public function addSale(Order $order): self
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Article $article
-     *
-     * @return $this
-     */
-    public function addArticle(Article $article): self
-    {
-        if (!$this->articles->contains($article)) {
-            $this->articles->add($article);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Transaction $transaction
-     *
-     * @return $this
-     */
-    public function addTransaction(Transaction $transaction): self
-    {
-        if (!$this->transactions->contains($transaction)) {
-            $this->transactions->add($transaction);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Card $card
-     *
-     * @return $this
-     */
-    public function addCard(Card $card): self
-    {
-        if (!$this->cards->contains($card)) {
-            $this->cards->add($card);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Comment $comment
-     *
-     * @return $this
-     */
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection | Goods[]
-     */
-    public function getGoods(): Collection
-    {
-        return $this->goods;
-    }
-
-    /**
-     * @param Goods $goods
-     *
-     * @return $this
-     */
-    public function addGoods(Goods $goods): self
-    {
-        if (!$this->comments->contains($goods)) {
-            $this->comments->add($goods);
-        }
+        $this->passport = $passport;
 
         return $this;
     }
@@ -369,11 +165,11 @@ class User implements UserInterface
     /**
      * @return array
      */
-    public function getOrdersInArray(): array
+    public function getReservationsInArray(): array
     {
-        return $this->getOrders()->map(
-            static function (Order $order): array {
-                return $order->toArray();
+        return $this->getReservations()->map(
+            static function (Reservation $reservation): array {
+                return $reservation->toArray();
             }
         )->toArray();
     }
@@ -381,37 +177,15 @@ class User implements UserInterface
     /**
      * @return array
      */
-    public function toArray(): array
+    public function getTicketsInArray(): array
     {
-        return [
-            'id' => $this->getId(),
-            'email' => $this->getEmail()->getValue(),
-            'phone' => is_null($this->getPhone()) ? null : $this->getPhone()->getValue(),
-            'orders' => $this->getOrdersInArray(),
-            'articles' => $this->getArticles()->map(
-                static function (Article $article): array {
-                    return $article->toArray();
-                }
-            )->toArray(),
-            'created_at' => $this->getCreatedAt()->format(DateTimeImmutable::ATOM),
-            'cards' => $this->getCards()->map(
-                static function (Card $card): array {
-                    return $card->toArray();
-                }
-            )->toArray(),
-            'comments' => $this->getComments()->map(
-                static function (Comment $comment): array {
-                    return $comment->toArray();
-                }
-            )->toArray(),
-            'goods' => $this->getGoods()->map(
-                static function (Goods $goods): array {
-                    return $goods->toArray();
-                }
-            )->toArray(),
-        ];
+        return $this->getTickets()->map(
+            static function (Ticket $ticket): array {
+                return $ticket->toArray();
+            }
+        )->toArray();
     }
-
+//Методы для имплементации интерфейса
     public function getRoles()
     {
 
@@ -430,5 +204,22 @@ class User implements UserInterface
     public function eraseCredentials()
     {
 
+    }
+
+    public function getPassword()
+    {
+        // TODO: Implement getPassword() method.
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'email' => empty($this->email) ? null : $this->getEmail()->getValue(),
+            'passport' => empty($this->passport) ? null : $this->getPassport()->toArray(),
+        ];
     }
 }
