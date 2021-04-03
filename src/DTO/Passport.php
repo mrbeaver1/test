@@ -60,9 +60,9 @@ class Passport
     private $lastName;
 
     /**
-     * @var string
+     * @var string | null
      *
-     * @ORM\Column(type="string", name="middle_name")
+     * @ORM\Column(type="string", name="middle_name", nullable=true)
      */
     private $middleName;
 
@@ -74,7 +74,7 @@ class Passport
      * @param DateTimeImmutable $passportIssueDate
      * @param string            $firstName
      * @param string            $lastName
-     * @param string            $middleName
+     * @param string | null     $middleName
      */
     public function __construct(
         string $passportSeries,
@@ -84,7 +84,7 @@ class Passport
         DateTimeImmutable $passportIssueDate,
         string $firstName,
         string $lastName,
-        string $middleName
+        ?string $middleName = null
     ) {
         $this->passportSeries = $passportSeries;
         $this->passportNumber = $passportNumber;
@@ -153,9 +153,9 @@ class Passport
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getMiddleName(): string
+    public function getMiddleName(): ?string
     {
         return $this->middleName;
     }

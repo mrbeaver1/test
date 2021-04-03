@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/v1/callback")
  */
-class CallBackController
+class CallBackController extends BaseApiController implements CallBackControllerInterface
 {
     /**
      * @var FlightRepositoryInterface

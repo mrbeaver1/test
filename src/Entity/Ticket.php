@@ -30,8 +30,8 @@ class Ticket
     /**
      * @var Flight
      *
-     * @ORM\ManyToOne(targetEntity="Flight")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Flight", inversedBy="tickets")
+     * @ORM\JoinColumn(name="flight_id", referencedColumnName="id")
      */
     private $flight;
 

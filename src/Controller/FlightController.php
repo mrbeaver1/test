@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api-flight/v1")
  */
-class FlightController extends AbstractController
+class FlightController extends BaseApiController implements FlightControllerInterface
 {
     /**
      * @var FlightRepositoryInterface

@@ -51,13 +51,26 @@ class Flight
     private $isActive;
 
     /**
+     * @var Collection | Ticket[]
+     *
+     * @ORM\OneToMany(targetEntity="Ticket", mappedBy="flight")
+     */
+    private $tickets;
+
+    /**
      * @param int               $flightNumber
      * @param DateTimeImmutable $departure
      * @param array | Place[]   $places
+     * @param array | Ticket[]  $tickets
      */
-    public function __construct(int $flightNumber, DateTimeImmutable $departure, array $places = [])
-    {
+    public function __construct(
+        int $flightNumber,
+        DateTimeImmutable $departure,
+        array $places = [],
+        array $tickets = []
+    ) {
         $this->places = new ArrayCollection(array_unique($places, SORT_REGULAR));
+        $this->tickets = new ArrayCollection(array_unique($tickets, SORT_REGULAR));
         $this->departure = $departure;
         $this->flightNumber = $flightNumber;
         $this->isActive = true;
