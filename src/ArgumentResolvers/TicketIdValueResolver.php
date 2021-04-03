@@ -1,29 +1,28 @@
 <?php
 
-
 namespace App\ArgumentResolvers;
 
-
 use App\Exception\ApiHttpException\ApiNotFoundException;
+use App\Validators\TicketIdValidator;
 use App\VO\ApiErrorCode;
-use App\VO\PlaceId;
+use App\VO\TicketId;
 use Exception;
 use Generator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class PlaceIdValueResolver implements ArgumentValueResolverInterface
+class TicketIdValueResolver implements ArgumentValueResolverInterface
 {
     /**
-     * @var PlaceIdValidator
+     * @var TicketIdValidator
      */
     private $validator;
 
     /**
-     * @param PlaceIdValidator $validator
+     * @param TicketIdValidator $validator
      */
-    public function __construct(PlaceIdValidator $validator)
+    public function __construct(TicketIdValidator $validator)
     {
         $this->validator = $validator;
     }
@@ -36,7 +35,7 @@ class PlaceIdValueResolver implements ArgumentValueResolverInterface
      */
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        return PlaceId::class === $argument->getType();
+        return TicketId::class === $argument->getType();
     }
 
     /**
@@ -49,14 +48,14 @@ class PlaceIdValueResolver implements ArgumentValueResolverInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument): Generator
     {
-        $placeId = $request->get('place_id');
+        $ticketId = $request->get('ticket_id');
 
-        $errors = $this->validator->validate(['place_id' => $placeId]);
+        $errors = $this->validator->validate(['ticket_id' => $ticketId]);
 
         if (!empty($errors)) {
             throw new ApiNotFoundException($errors, new ApiErrorCode(ApiErrorCode::ENTITY_NOT_FOUND));
         }
 
-        yield new PlaceId($placeId);
+        yield new TicketId($ticketId);
     }
 }

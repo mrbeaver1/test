@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class ReservationData
+class PlaceNumberData
 {
     /**
      * @var int

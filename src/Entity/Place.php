@@ -4,6 +4,10 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\PlaceRepository")
+ * @ORM\Table(name="place")
+ */
 class Place
 {
     /**
@@ -18,27 +22,29 @@ class Place
     /**
      * @var Flight
      *
-     * @ORM\ManyToOne(targetEntity="Flight")
-     * @ORM\JoinColumn(name="Flight_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Flight", inversedBy="places")
+     * @ORM\JoinColumn(name="flight_id", referencedColumnName="id")
      */
     private $flight;
 
     /**
      * @var Ticket | null
+     *
+     * @ORM\OneToOne(targetEntity="Ticket", mappedBy="place")
      */
     private $ticket;
 
     /**
      * @var Reservation | null
      *
-     * @ORM\Column(type="int", name="reservation")
+     * @ORM\OneToOne(targetEntity="Reservation", mappedBy="place")
      */
     private $reservation;
 
     /**
      * @var int
      *
-     * @ORM\Column(type="int", name="number")
+     * @ORM\Column(type="integer", name="number")
      */
     private $placeNumber;
 

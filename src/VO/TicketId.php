@@ -2,7 +2,7 @@
 
 namespace App\VO;
 
-class PlaceId
+class TicketId
 {
     /**
      * @var int

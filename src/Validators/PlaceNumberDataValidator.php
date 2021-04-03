@@ -5,7 +5,7 @@ namespace App\Validators;
 use App\Validation\AbstractValidator;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ReservationDataValidator extends AbstractValidator
+class PlaceNumberDataValidator extends AbstractValidator
 {
     /**
      * @return array

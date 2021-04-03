@@ -28,35 +28,6 @@ class ReservationRepository extends ServiceEntityRepository implements Reservati
     }
 
     /**
-     * @param int $reservationId
-     * @param int $userId
-     *
-     * @return Reservation
-     * @throws EntityNotFoundException
-     * @throws NonUniqueResultException
-     */
-    public function getByReservationIdAndUserId(int $reservationId, int $userId): Reservation
-    {
-        $reservation = $this->getEntityManager()
-            ->createQueryBuilder()
-            ->select('r')
-            ->from(Reservation::class, 'r')
-            ->where('r.id = :reservationId')
-            ->setParameter('reservationId', $reservationId)
-            ->join(User::class, 'u', 'with', 'u.id = r.user')
-            ->andWhere('u.id = :userId')
-            ->setParameter('userId', $userId)
-            ->getQuery()
-            ->getOneOrNullResult();
-
-        if (is_null($reservation)) {
-            throw new EntityNotFoundException("Бронь с id $reservationId не найдена у юзера с id $userId");
-        }
-
-        return $reservation;
-    }
-
-    /**
      * @param int $id
      *
      * @return Reservation

@@ -64,7 +64,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
             ->from(User::class, 'u')
             ->where('u.passport.passportSeries = :passportSeries')
             ->andWhere('u.passport.passportNumber = :passportNumber')
-            ->andWhere('u.passport.passportDivisionName = :passportDivisionName')
+            ->andWhere('LOWER(u.passport.passportDivisionName) = LOWER(:passportDivisionName)')
             ->andWhere('u.passport.passportDivisionCode = :passportDivisionCode')
             ->andWhere('u.passport.passportIssueDate = :passportIssueDate')
             ->setParameters([

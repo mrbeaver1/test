@@ -7,6 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\FlightRepository")
+ * @ORM\Table(name="flight")
+ */
 class Flight
 {
     /**
@@ -56,6 +60,7 @@ class Flight
         $this->places = new ArrayCollection(array_unique($places, SORT_REGULAR));
         $this->departure = $departure;
         $this->flightNumber = $flightNumber;
+        $this->isActive = true;
     }
 
     /**

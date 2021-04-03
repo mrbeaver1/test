@@ -2,30 +2,27 @@
 
 namespace App\ArgumentResolvers;
 
-use App\DTO\RegisterUserData;
-use App\DTO\Passport;
+use App\DTO\CallBackData;
 use App\Exception\ApiHttpException\ApiBadRequestException;
-use App\Validators\RegisterUserDataValidator;
+use App\Validators\CallBackDataValidator;
 use App\VO\ApiErrorCode;
-use App\VO\Email;
-use DateTimeImmutable;
-use Exception;
+use App\VO\Event;
 use Generator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class RegisterUserDataResolver implements ArgumentValueResolverInterface
+class CallBackDataResolver implements ArgumentValueResolverInterface
 {
     /**
-     * @var RegisterUserDataValidator
+     * @var CallBackDataValidator
      */
     private $validator;
 
     /**
-     * @param RegisterUserDataValidator $validator
+     * @param CallBackDataValidator $validator
      */
-    public function __construct(RegisterUserDataValidator $validator)
+    public function __construct(CallBackDataValidator $validator)
     {
         $this->validator = $validator;
     }
@@ -38,7 +35,7 @@ class RegisterUserDataResolver implements ArgumentValueResolverInterface
      */
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        return RegisterUserData::class === $argument->getType();
+        return CallBackData::class === $argument->getType();
     }
 
     /**
@@ -46,16 +43,22 @@ class RegisterUserDataResolver implements ArgumentValueResolverInterface
      * @param ArgumentMetadata $argument
      *
      * @return Generator
-     *
-     * @throws Exception
      */
     public function resolve(Request $request, ArgumentMetadata $argument): Generator
     {
         $params = json_decode($request->getContent(), true);
-        $email = $params['email'] ?? null;
-        $passport = $params['passport'] ?? null;
 
-        $errors = $this->validator->validate(['email' => $email, 'passport' => $passport]);
+        $flightId = $params['flight_id'] ?? null;
+        $triggeredAt = $params['triggered_at'] ?? null;
+        $event = $params['event'] ?? null;
+        $secretKey = $params['secret_key'] ?? null;
+
+        $errors = $this->validator->validate([
+            'flight_id' => $flightId,
+            'triggered_at' => $triggeredAt,
+            'event' => $event,
+            'secret_key' => $secretKey,
+        ]);
 
         if (!empty($errors)) {
             throw new ApiBadRequestException(
@@ -64,18 +67,11 @@ class RegisterUserDataResolver implements ArgumentValueResolverInterface
             );
         }
 
-        yield new RegisterUserData(
-            new Email($email),
-            new Passport(
-                $passport['series'],
-                $passport['number'],
-                $passport['division_name'],
-                $passport['division_code'],
-                new DateTimeImmutable($passport['issue_date']),
-                $passport['first_name'],
-                $passport['last_name'],
-                $passport['middle_name']
-            )
+        yield new CallBackData(
+            $flightId,
+            $triggeredAt,
+            new Event($event),
+            $secretKey
         );
     }
 }

@@ -2,17 +2,17 @@
 
 namespace App\Repository;
 
-use App\Entity\Reservation;
+use App\Entity\Ticket;
 use Doctrine\ORM\EntityNotFoundException;
 
-interface ReservationRepositoryInterface
+interface TicketRepositoryInterface
 {
     /**
      * @param int $id
      *
-     * @return Reservation
+     * @return Ticket
      *
      * @throws EntityNotFoundException
      */
-    public function getById(int $id): Reservation;
+    public function getById(int $id): Ticket;
 }

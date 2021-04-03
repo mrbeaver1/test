@@ -218,9 +218,7 @@ class User implements UserInterface
     {
         return [
             'id' => $this->getId(),
-            'email' => empty($this->email) ? null : $this->getEmail(),
-            'reservations' => $this->getReservationsInArray(),
-            'tickets' => $this->getTicketsInArray(),
+            'email' => empty($this->email) ? null : $this->getEmail()->getValue(),
             'passport' => empty($this->passport) ? null : $this->getPassport()->toArray(),
         ];
     }

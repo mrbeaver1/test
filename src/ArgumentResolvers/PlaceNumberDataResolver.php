@@ -2,33 +2,33 @@
 
 namespace App\ArgumentResolvers;
 
-use App\DTO\ReservationData;
+use App\DTO\PlaceNumberData;
 use App\Exception\ApiHttpException\ApiBadRequestException;
-use App\Validators\ReservationDataValidator;
+use App\Validators\PlaceNumberDataValidator;
 use App\VO\ApiErrorCode;
 use Generator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class ReservationDataResolver implements ArgumentValueResolverInterface
+class PlaceNumberDataResolver implements ArgumentValueResolverInterface
 {
     /**
-     * @var ReservationDataValidator
+     * @var PlaceNumberDataValidator
      */
     private $validator;
 
     /**
-     * @param ReservationDataValidator $validator
+     * @param PlaceNumberDataValidator $validator
      */
-    public function __construct(ReservationDataValidator $validator)
+    public function __construct(PlaceNumberDataValidator $validator)
     {
         $this->validator = $validator;
     }
 
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        return ReservationData::class === $argument->getType();
+        return PlaceNumberData::class === $argument->getType();
     }
 
     public function resolve(Request $request, ArgumentMetadata $argument): Generator
@@ -46,6 +46,6 @@ class ReservationDataResolver implements ArgumentValueResolverInterface
             );
         }
 
-        yield new ReservationData($placeNumber);
+        yield new PlaceNumberData($placeNumber);
     }
 }

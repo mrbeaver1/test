@@ -68,7 +68,7 @@ class FlightController extends AbstractController
                     $createFlightData->getNumber(),
                     $createFlightData->getDate(),
                     $createFlightData->getPlacesCount()
-                ),
+                )->getId(),
             ],
         ], JsonResponse::HTTP_CREATED);
     }

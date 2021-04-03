@@ -5,6 +5,10 @@ namespace App\Entity;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\ReservationRepository")
+ * @ORM\Table(name="reservation")
+ */
 class Reservation
 {
     /**
@@ -26,14 +30,14 @@ class Reservation
     /**
      * @var Place
      *
-     * @ORM\OneToOne(targetEntity="Place", mappedBy="reservation")
+     * @ORM\OneToOne(targetEntity="Place", inversedBy="reservation")
      */
     private $place;
 
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="Reservation")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="reservations")
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
     private $owner;
@@ -88,8 +92,8 @@ class Reservation
     {
         return [
             'id' => $this->getId(),
-            'owner' => $this->getOwner(),
-            'place' => $this->getPlace(),
+            'owner' => $this->getOwner()->getId(),
+            'place' => $this->getPlace()->getId(),
             'created_at' => $this->getCreatedAt()->format(DateTimeImmutable::ATOM),
         ];
     }

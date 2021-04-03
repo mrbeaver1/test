@@ -64,14 +64,12 @@ class PlaceRepository extends ServiceEntityRepository implements PlaceRepository
             ->setParameter('number', $number)
             ->join(Flight::class, 'f', 'with', 'f.id = p.flight')
             ->andWhere('f.id = :flightId')
-            ->setParameter('flightId', $flightId)
-            ->getQuery()
-            ->getOneOrNullResult();
+            ->setParameter('flightId', $flightId);
 
         if (is_null($place)) {
             throw new EntityNotFoundException("Место с номером $number не найдено у рейса с id $flightId");
         }
 
-        return $place;
+        return $place->getQuery()->getOneOrNullResult();
     }
 }

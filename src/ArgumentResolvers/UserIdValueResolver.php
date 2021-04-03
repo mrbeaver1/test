@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ArgumentResolver;
+namespace App\ArgumentResolvers;
 
 use App\Validators\UserIdValidator;
 use App\VO\UserId;

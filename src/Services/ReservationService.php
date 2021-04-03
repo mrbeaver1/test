@@ -34,7 +34,7 @@ class ReservationService
      */
     public function placeReservation(User $user, Place $place): Reservation
     {
-        if (!empty($place->getTicket())) {
+        if (!empty($place->getTicket()) || !empty($place->getReservation())) {
             throw new EntityExistsException('Данное место уже куплено или забронировано');
         }
 

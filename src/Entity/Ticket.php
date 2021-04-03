@@ -4,6 +4,10 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\TicketRepository")
+ * @ORM\Table(name="ticket")
+ */
 class Ticket
 {
     /**
@@ -18,7 +22,7 @@ class Ticket
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="tickets")
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
     private $owner;
@@ -26,7 +30,7 @@ class Ticket
     /**
      * @var Flight
      *
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Flight")
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
     private $flight;
@@ -34,7 +38,7 @@ class Ticket
     /**
      * @var Place
      *
-     * @ORM\OneToOne(targetEntity="Place", mappedBy="ticket")
+     * @ORM\OneToOne(targetEntity="Place", inversedBy="ticket")
      */
     private $place;
 
@@ -89,9 +93,9 @@ class Ticket
     {
         return [
             'id' => $this->getId(),
-            'flight' => $this->getFlight(),
-            'place' => $this->getPlace(),
-            'owner' => $this->getOwner(),
+            'flight' => $this->getFlight()->getId(),
+            'place' => $this->getPlace()->getId(),
+            'owner' => $this->getOwner()->getId(),
         ];
     }
 }

@@ -64,7 +64,11 @@ class CreateFlightDataValidator extends AbstractValidator
                 'minMessage' => 'ID не может быть меньше 150',
                 'maxMessage' => 'ID не может быть более 150',
             ]),
-            $this->getNumberRules(),
+            $this->getNotBlank(),
+            new Assert\Type([
+                'type' => 'integer',
+                'message' => 'Значение должно быть целым числом',
+            ]),
         ];
     }
 }

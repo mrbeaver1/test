@@ -1,10 +1,10 @@
 <?php
 
-namespace App\ArgumentResolvers;
+namespace App\Validators;
 
 use App\Validation\AbstractValidator;
 
-class PlaceIdValidator extends AbstractValidator
+class TicketIdValidator extends AbstractValidator
 {
     /**
      * Возвращает список полей с правилами валидации
@@ -14,7 +14,7 @@ class PlaceIdValidator extends AbstractValidator
     protected function getConstraints(): array
     {
         return [
-            'place_id' => $this->getIdRules(),
+            'ticket_id' => $this->getIdRules(),
         ];
     }
 

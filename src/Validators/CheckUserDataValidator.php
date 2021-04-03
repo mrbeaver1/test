@@ -3,7 +3,6 @@
 namespace App\Validators;
 
 use App\Validation\AbstractValidator;
-use App\Validation\Constraints\LessThanDate;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CheckUserDataValidator extends AbstractValidator
@@ -76,7 +75,10 @@ class CheckUserDataValidator extends AbstractValidator
     {
         return [
             $this->getNotBlank(),
-            $this->getStringRules(),
+            new Assert\Type([
+                'type' => 'string',
+                'message' => 'Недопустимый тип. Ожидалась строка',
+            ]),
         ];
     }
 

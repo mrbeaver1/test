@@ -39,7 +39,7 @@ class FlightRepository extends ServiceEntityRepository implements FlightReposito
             ->createQueryBuilder()
             ->select('f')
             ->from(Flight::class, 'f')
-            ->where('f.number = :number')
+            ->where('f.flightNumber = :number')
             ->setParameter('number', $number)
             ->getQuery()
             ->getOneOrNullResult();
