@@ -17,6 +17,7 @@ Do you want to execute this recipe?
      [p] Yes permanently, never ask again for this project
      (defaults to n): 
 Ответить a
+Далее необходимо вбить в .env свои актуальные данные
 2.2 Для установки миграций на пустую БД выполнить в консоли команду
 php bin/console doctrine:migrations:migrate,
 WARNING! You are about to execute a database migration that could result in schema changes and data loss. Are you sure you wish to continue? (y/n)
