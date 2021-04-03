@@ -22,3 +22,4 @@ Do you want to execute this recipe?
 php bin/console doctrine:migrations:migrate,
 WARNING! You are about to execute a database migration that could result in schema changes and data loss. Are you sure you wish to continue? (y/n)
 ответить y.
+Документация назодится по адресу public/openapi.yaml
