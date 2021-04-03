@@ -1,0 +1,628 @@
+openapi: 3.0.0
+info:
+  title: 'test API'
+  version: 1.0.0
+paths:
+  '/user/{user_id}/flight/{flight_id}/place/reservation':
+    post:
+      tags:
+        - /api/v1
+      summary: 'Запрос на бронирование места.'
+      operationId: 'App\Controller\ApiControllerInterface::placeReservation'
+      parameters:
+        -
+          name: user_id
+          in: path
+          description: 'ID юзера'
+          required: true
+          schema:
+            type: string
+            example: '1'
+        -
+          name: flight_id
+          in: path
+          description: 'ID рейса'
+          required: true
+          schema:
+            type: string
+            example: '1'
+      requestBody:
+        description: 'Место зарезервировано'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                place_number:
+                  description: 'Номер места для бронирования'
+                  type: integer
+                  example: 1
+              type: object
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reservationResponseData'
+        '400':
+          description: 'Bad Request (Ошибка валидации)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: 'Not Found (Не найдено)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: 'Internal Server Error (Внутренняя ошибка сервера)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  '/user/{user_id}/flight/{flight_id}/place/reservation/{reservation_id}':
+    delete:
+      tags:
+        - /api/v1
+      summary: 'Отменить бронь'
+      operationId: 'App\Controller\ApiControllerInterface::cancelReservation'
+      parameters:
+        -
+          name: user_id
+          in: path
+          description: 'ID юзера'
+          required: true
+          schema:
+            type: string
+            example: '1'
+        -
+          name: flight_id
+          in: path
+          description: 'ID рейса'
+          required: true
+          schema:
+            type: string
+            example: '1'
+        -
+          name: reservation_id
+          in: path
+          description: 'ID брони'
+          required: true
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '204':
+          description: NO_CONTENT
+        '400':
+          description: 'Bad Request (Ошибка валидации)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: 'Not Found (Не найдено)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: 'Internal Server Error (Внутренняя ошибка сервера)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  '/user/{user_id}/flight/{flight_id}/place/ticket/pay':
+    post:
+      tags:
+        - /api/v1
+      summary: 'Запрос на покупку билета.'
+      operationId: 'App\Controller\ApiControllerInterface::payTicket'
+      parameters:
+        -
+          name: user_id
+          in: path
+          description: 'ID юзера'
+          required: true
+          schema:
+            type: string
+            example: '1'
+        -
+          name: flight_id
+          in: path
+          description: 'ID рейса'
+          required: true
+          schema:
+            type: string
+            example: '1'
+      requestBody:
+        description: 'Билет куплен'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                place_number:
+                  description: 'Номер места для бронирования'
+                  type: integer
+                  example: 1
+              type: object
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ticetResponseData'
+        '400':
+          description: 'Bad Request (Ошибка валидации)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: 'Not Found (Не найдено)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: 'Internal Server Error (Внутренняя ошибка сервера)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  '/user/{user_id}/flight/{flight_id}/place/ticket/{ticket_id}/return':
+    delete:
+      tags:
+        - /api/v1
+      summary: 'Вернуть билет'
+      operationId: 'App\Controller\ApiControllerInterface::returnTicket'
+      parameters:
+        -
+          name: user_id
+          in: path
+          description: 'ID юзера'
+          required: true
+          schema:
+            type: string
+            example: '1'
+        -
+          name: flight_id
+          in: path
+          description: 'ID рейса'
+          required: true
+          schema:
+            type: string
+            example: '1'
+        -
+          name: ticket_id
+          in: path
+          description: 'ID билета'
+          required: true
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '204':
+          description: NO_CONTENT
+        '400':
+          description: 'Bad Request (Ошибка валидации)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: 'Not Found (Не найдено)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: 'Internal Server Error (Внутренняя ошибка сервера)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /event:
+    post:
+      tags:
+        - /api/v1/callback
+      summary: 'Запрос для callback. Принимает два события: кончились билеты и отмена рейса. В случае отмены рейса отправляет письмо на почту пользователям, забронировавшим или купившим место'
+      operationId: 'App\Controller\CallBackControllerInterface::callback'
+      requestBody:
+        description: 'Событие успешно принято и обрабтано'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                flight_id:
+                  description: 'Индивидуальный номер рейса'
+                  type: string
+                  example: '1'
+                triggered_at:
+                  type: string
+                  example: '1585012345'
+                event:
+                  description: 'Тип события'
+                  type: string
+                  example: 'flight_canceled, flight_ticket_sales_completed'
+                secret_key:
+                  description: 'Секретный ключ'
+                  type: string
+                  example: a1b2c3d4e5f6a1b2c3d4e5f6
+              type: object
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/callbackResponse'
+        '400':
+          description: 'Bad Request (Ошибка валидации)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: 'Not Found (Не найдено)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: 'Internal Server Error (Внутренняя ошибка сервера)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /flight:
+    post:
+      tags:
+        - /api-flight/v1
+      summary: 'Запрос на создание рейса.'
+      operationId: 'App\Controller\FlightControllerInterface::createFlight'
+      requestBody:
+        description: 'Рейс создан'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                number:
+                  description: 'Номер рейса'
+                  type: integer
+                  example: 1
+                date:
+                  description: 'Дата полета'
+                  type: string
+                  example: 20.12.2020
+                place_count:
+                  description: 'Количество мест в самолете(150)'
+                  type: integer
+                  example: 150
+              type: object
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/flightIdData'
+        '400':
+          description: 'Bad Request (Ошибка валидации)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: 'Not Found (Не найдено)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: 'Internal Server Error (Внутренняя ошибка сервера)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /user:
+    get:
+      tags:
+        - /user-api/v1
+      summary: 'Найти юзера'
+      description: 'Получить данные юзера по паспортным данным'
+      operationId: 'App\Controller\UserControllerInterface::showUser'
+      parameters:
+        -
+          name: passport_series
+          in: query
+          description: 'Серия паспорта'
+          required: true
+          schema:
+            type: string
+            example: '2019'
+        -
+          name: passport_number
+          in: query
+          description: 'Номер паспорта'
+          required: true
+          schema:
+            type: string
+            example: '313131'
+        -
+          name: passport_division_name
+          in: query
+          description: 'Название подразделения, выдавшего паспорт'
+          required: true
+          schema:
+            type: string
+            example: 'ГУ МВД России по Воронежской области'
+        -
+          name: passport_division_code
+          in: query
+          description: 'Код подразделения, выдавшего паспорт'
+          required: true
+          schema:
+            type: string
+            example: '360001'
+        -
+          name: passport_issue_date
+          in: query
+          description: 'Дата выдачи'
+          required: true
+          schema:
+            type: string
+            example: 30.01.2020
+        -
+          name: first_name
+          in: query
+          description: 'Имя юзера по паспорту'
+          required: false
+          schema:
+            type: string
+            example: Иван
+        -
+          name: last_name
+          in: query
+          description: 'Фамилия юзера по паспорту'
+          required: false
+          schema:
+            type: string
+            example: Иванов
+        -
+          name: middle_name
+          in: query
+          description: 'Отчество юзера по паспорту'
+          required: false
+          schema:
+            type: string
+            example: Иванович
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseData'
+        '400':
+          description: 'Bad Request (Ошибка валидации)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: 'Internal Server Error (Внутренняя ошибка сервера)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      tags:
+        - /user-api/v1
+      summary: 'Запрос на регистрацию пользователя.'
+      operationId: 'App\Controller\UserControllerInterface::registerUser'
+      requestBody:
+        description: 'Пользователь авторизован'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  description: 'Электронная почта юзера'
+                  type: string
+                  example: email@email.com
+                passport:
+                  $ref: '#/components/schemas/userPassportData'
+              type: object
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userIdData'
+        '400':
+          description: 'Bad Request (Ошибка валидации)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: 'Not Found (Не найдено)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: 'Internal Server Error (Внутренняя ошибка сервера)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+components:
+  schemas:
+    error:
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/errorObject'
+      type: object
+    errorObject:
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/errorBody'
+      type: object
+    errorBody:
+      properties:
+        code:
+          type: string
+          example: string
+        message:
+          type: string
+          example: string
+        field:
+          type: string
+          example: string
+      type: object
+    reservationResponseData:
+      properties:
+        data:
+          $ref: '#/components/schemas/reservationResponse'
+      type: object
+    reservationResponse:
+      properties:
+        id:
+          description: 'Уникальный номер брони'
+          type: integer
+          example: 1
+        owner:
+          description: 'Уникальный номер владельца брони'
+          type: integer
+          example: 1
+        place:
+          description: 'Уникальный номер места в самолете'
+          type: integer
+          example: 1
+        created_at:
+          description: 'Дата и время создания'
+          type: string
+          example: '2005-08-15T15:52:01+00:00'
+      type: object
+    ticetResponseData:
+      properties:
+        data:
+          $ref: '#/components/schemas/ticetResponse'
+      type: object
+    ticetResponse:
+      properties:
+        id:
+          description: 'Уникальный номер брони'
+          type: integer
+          example: 1
+        owner:
+          description: 'Уникальный номер владельца брони'
+          type: integer
+          example: 1
+        place:
+          description: 'Уникальный номер места в самолете'
+          type: integer
+          example: 1
+        flight:
+          description: 'Уникальный номер рейса'
+          type: integer
+          example: '1'
+      type: object
+    callbackResponse:
+      properties:
+        '':
+          example: 'Событие успешно принято и обработано'
+      type: object
+    flightIdData:
+      properties:
+        data:
+          $ref: '#/components/schemas/flightId'
+      type: object
+    flightId:
+      properties:
+        id:
+          description: 'Уникальный номер рейса'
+          type: integer
+          example: 1
+      type: object
+    responseData:
+      properties:
+        data:
+          $ref: '#/components/schemas/response'
+      type: object
+    response:
+      properties:
+        id:
+          description: 'ID юзера'
+          type: integer
+          example: '1'
+        email:
+          description: 'Электронная почта юзера'
+          type: string
+          example: email@email.com
+        passport:
+          $ref: '#/components/schemas/userPassportData'
+      type: object
+    userPassportData:
+      properties:
+        series:
+          description: 'Серия паспорта'
+          type: string
+          example: '2013'
+        number:
+          description: 'Номер паспорта'
+          type: string
+          example: '313131'
+        division_name:
+          description: 'Название подразделения, выдавшего паспорт'
+          type: string
+          example: '313131'
+        division_code:
+          description: 'Код подразделения, выдавшего паспорт'
+          type: string
+          example: '360001'
+        first_name:
+          description: 'Имя юзера'
+          type: string
+          example: Иван
+        last_name:
+          description: 'Фамилия юзера'
+          type: string
+          example: Иванов
+        middle_name:
+          description: 'Отчество юзера'
+          type: string
+          example: Иванович
+      type: object
+    userIdData:
+      properties:
+        data:
+          $ref: '#/components/schemas/userId'
+      type: object
+    userId:
+      properties:
+        id:
+          description: 'Уникальный номер Юзера'
+          type: integer
+          example: 1
+      type: object
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

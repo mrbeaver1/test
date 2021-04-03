@@ -6,20 +6,17 @@ use App\DTO\CheckUserData;
 use App\DTO\RegisterUserData;
 use App\Exception\ApiHttpException\ApiBadRequestException;
 use App\Exception\ApiHttpException\ApiNotFoundException;
-use App\Exception\EntityException\EntityExistsException;
 use App\Repository\UserRepositoryInterface;
 use App\Services\UserService;
 use App\VO\ApiErrorCode;
-use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\NonUniqueResultException;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/user-api/v1")
  */
-class UserController extends AbstractController
+class UserController extends BaseApiController implements UserControllerInterface
 {
     /**
      * @var UserRepositoryInterface

@@ -22,14 +22,13 @@ use App\VO\TicketId;
 use App\VO\UserId;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\NonUniqueResultException;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/api/v1")
  */
-class ApiController extends AbstractController
+class ApiController extends BaseApiController implements ApiControllerInterface
 {
     /**
      * @var UserRepositoryInterface
